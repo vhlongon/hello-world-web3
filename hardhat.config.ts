@@ -12,7 +12,6 @@ const config: HardhatUserConfig = {
   solidity: "0.8.0",
   defaultNetwork: "ropsten",
   typechain: {
-    outDir: "types",
     target: "ethers-v5",
     alwaysGenerateOverloads: false,
   },

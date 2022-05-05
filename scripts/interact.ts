@@ -1,6 +1,6 @@
 import contract from "../artifacts/contracts/HelloWorld.sol/HelloWorld.json";
 import { ethers } from "hardhat";
-import { HelloWorld } from "../types";
+import { HelloWorld } from "../typechain-types";
 
 const { API_KEY, PRIVATE_KEY, CONTRACT_ADDRESS } = process.env;
 
