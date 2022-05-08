@@ -16,7 +16,7 @@ const abbreviateAddress = (address: string) =>
 const HelloWorld = () => {
   const [walletAddress, setWallet] = useState("");
   const [status, setStatus] = useState<string | JSX.Element>("");
-  const [message, setMessage] = useState("No connection to the network."); //default message
+  const [message, setMessage] = useState("No connection to the network.");
   const [newMessage, setNewMessage] = useState("");
 
   const addSmartContractListener = () => {
