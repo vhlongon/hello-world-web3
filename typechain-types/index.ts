@@ -2,5 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { HelloWorld } from "./HelloWorld";
-export * as factories from "./factories";
-export { HelloWorld__factory } from "./factories/HelloWorld__factory";
+export * as factories from "../test/factories";
+export { HelloWorld__factory } from "../test/factories/HelloWorld__factory";
