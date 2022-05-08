@@ -10,42 +10,98 @@ import {
 
 import alchemylogo from "./alchemylogo.svg";
 
+const abbreviateAddress = (address: string) =>
+  `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+
 const HelloWorld = () => {
-  //state variables
   const [walletAddress, setWallet] = useState("");
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState<string | JSX.Element>("");
   const [message, setMessage] = useState("No connection to the network."); //default message
   const [newMessage, setNewMessage] = useState("");
 
-  //called only once
-  useEffect(() => {}, []);
+  const addSmartContractListener = () => {
+    helloWorldContract.events.UpdatedMessages(
+      {},
+      (
+        error: Error,
+        data: { returnValues: { oldStr: string; newStr: string } }
+      ) => {
+        if (error) {
+          setStatus("Error: " + error);
+        } else {
+          setMessage(data.returnValues.newStr);
+          setNewMessage("");
+          setStatus("Your message has been updated.");
+        }
+      }
+    );
+  };
 
-  function addSmartContractListener() {
-    //TODO: implement
-  }
+  const addWalletListener = () => {
+    if (window?.ethereum) {
+      window.ethereum.on("accountsChanged", (accounts) => {
+        const accs = accounts as string[];
 
-  function addWalletListener() {
-    //TODO: implement
-  }
+        if (accs && accs.length > 0) {
+          setWallet(accs[0]);
+          setStatus("👆🏽 Write a message in the text-field above.");
+        } else {
+          setWallet("");
+          setStatus("🦊 Connect to Metamask using the top right button.");
+        }
+      });
+    } else {
+      setWallet("");
+      setStatus(
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={`https://metamask.io/download.html`}
+        >
+          🦊 You must install Metamask, a virtual Ethereum wallet, in your
+          browser.
+        </a>
+      );
+    }
+  };
+
+  useEffect(() => {
+    const loadMessage = async () => {
+      const currentMessage = await loadCurrentMessage();
+      setMessage(currentMessage);
+    };
+    loadMessage();
+    addSmartContractListener();
+
+    const loadWallet = async () => {
+      const { address, status } = await getCurrentWalletConnected();
+      setWallet(address);
+      setStatus(status);
+    };
+
+    loadWallet();
+    addWalletListener();
+  }, []);
 
   const connectWalletPressed = async () => {
-    //TODO: implement
+    const walletResponse = await connectWallet();
+    if (walletResponse) {
+      setStatus(walletResponse.status);
+      setWallet(walletResponse.address);
+    }
   };
 
   const onUpdatePressed = async () => {
-    //TODO: implement
+    const { status } = await updateMessage(walletAddress, newMessage);
+    setStatus(status);
   };
 
-  //the UI of our component
   return (
     <div id="container">
-      <img id="logo" src={alchemylogo}></img>
+      <img id="logo" alt="alchemy" src={alchemylogo}></img>
       <button id="walletButton" onClick={connectWalletPressed}>
         {walletAddress.length > 0 ? (
-          "Connected: " +
-          String(walletAddress).substring(0, 6) +
-          "..." +
-          String(walletAddress).substring(38)
+          `Connected: ${abbreviateAddress(walletAddress)}`
         ) : (
           <span>Connect Wallet</span>
         )}
@@ -64,6 +120,17 @@ const HelloWorld = () => {
           value={newMessage}
         />
         <p id="status">{status}</p>
+
+        <p>
+          <a
+            id="verify"
+            target="_blank"
+            rel="noreferrer"
+            href={`https://ropsten.etherscan.io/address/${process.env.REACT_APP_CONTRACT_ADDRESS}`}
+          >
+            See Contract on etherscan.io
+          </a>
+        </p>
 
         <button id="publish" onClick={onUpdatePressed}>
           Update

@@ -1,9 +1,8 @@
+import { MetaMaskInpageProvider } from "@metamask/providers";
+
 declare global {
-  namespace NodeJS {
-    interface ProcessEnv {
-      readonly CONTRACT_ADDRESS: string;
-      readonly ALCHEMY_KEY: string;
-    }
+  interface Window {
+    ethereum?: MetaMaskInpageProvider;
   }
 }
 
