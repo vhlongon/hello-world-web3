@@ -21,13 +21,9 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "eject": "react-scripts eject",
+    "lint": "eslint -c .eslintrc.js --ext .js,.jsx,.ts,.tsx .",
+    "lint:fix": "npm run lint -- --fix"
   },
   "browserslist": {
     "production": [
@@ -43,9 +39,14 @@
   },
   "devDependencies": {
     "@metamask/providers": "^8.1.1",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
     "assert": "^2.0.0",
+    "babel-eslint": "^10.1.0",
     "buffer": "^6.0.3",
     "crypto-browserify": "^3.12.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jest": "^26.1.5",
+    "eslint-plugin-prettier": "^4.0.0",
     "fs": "^0.0.1-security",
     "https-browserify": "^1.0.0",
     "os": "^0.1.2",
